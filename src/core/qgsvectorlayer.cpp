@@ -1998,10 +1998,22 @@ bool QgsVectorLayer::writeSld( QDomNode& node, QDomDocument& doc, QString& error
   nameNode.appendChild( doc.createTextNode( name() ) );
   node.appendChild( nameNode );
 
+  QDomElement userStyleElem = doc.createElement( "UserStyle" );
+  node.appendChild( userStyleElem );
+
+  QDomElement nameElem = doc.createElement( "se:Name" );
+  nameElem.appendChild( doc.createTextNode( name() ) );
+
+  userStyleElem.appendChild( nameElem );
+
+  QDomElement featureTypeStyleElem = doc.createElement( "se:FeatureTypeStyle" );
+  userStyleElem.appendChild( featureTypeStyleElem );
+
   if ( hasGeometryType() )
   {
-    node.appendChild( mRenderer->writeSld( doc, name() ) );
+    mRenderer->writeSld( featureTypeStyleElem );
   }
+  mLabeling->toSld( featureTypeStyleElem, this );
   return true;
 }
 

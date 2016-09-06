@@ -338,24 +338,10 @@ QgsFeatureRenderer* QgsFeatureRenderer::loadSld( const QDomNode &node, QgsWkbTyp
   return r;
 }
 
-QDomElement QgsFeatureRenderer::writeSld( QDomDocument& doc, const QgsVectorLayer &layer ) const
+void QgsFeatureRenderer::writeSld( QDomElement& featureStyleElement ) const
 {
-  return writeSld( doc, layer.name() );
-}
-
-QDomElement QgsFeatureRenderer::writeSld( QDomDocument& doc, const QString& styleName ) const
-{
-  QDomElement userStyleElem = doc.createElement( "UserStyle" );
-
-  QDomElement nameElem = doc.createElement( "se:Name" );
-  nameElem.appendChild( doc.createTextNode( styleName ) );
-  userStyleElem.appendChild( nameElem );
-
-  QDomElement featureTypeStyleElem = doc.createElement( "se:FeatureTypeStyle" );
-  toSld( doc, featureTypeStyleElem );
-  userStyleElem.appendChild( featureTypeStyleElem );
-
-  return userStyleElem;
+  QDomDocument doc = featureStyleElement.ownerDocument();
+  toSld( doc, featureStyleElement );
 }
 
 QgsLegendSymbologyList QgsFeatureRenderer::legendSymbologyItems( QSize iconSize )

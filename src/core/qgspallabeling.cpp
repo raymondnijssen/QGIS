@@ -526,7 +526,7 @@ QgsPalLayerSettings::~QgsPalLayerSettings()
 }
 
 
-QgsPalLayerSettings QgsPalLayerSettings::fromLayer( QgsVectorLayer* layer )
+QgsPalLayerSettings QgsPalLayerSettings::fromLayer( const QgsVectorLayer* layer )
 {
   QgsPalLayerSettings settings;
   settings.readFromLayer( layer );
@@ -543,7 +543,7 @@ QgsExpression* QgsPalLayerSettings::getLabelExpression()
   return expression;
 }
 
-static QColor _readColor( QgsVectorLayer* layer, const QString& property, const QColor& defaultColor = Qt::black, bool withAlpha = true )
+static QColor _readColor( const QgsVectorLayer* layer, const QString& property, const QColor& defaultColor = Qt::black, bool withAlpha = true )
 {
   int r = layer->customProperty( property + 'R', QVariant( defaultColor.red() ) ).toInt();
   int g = layer->customProperty( property + 'G', QVariant( defaultColor.green() ) ).toInt();
@@ -578,7 +578,7 @@ static Qt::PenJoinStyle _decodePenJoinStyle( const QString& str )
   return Qt::BevelJoin; // "Bevel"
 }
 
-void QgsPalLayerSettings::readDataDefinedPropertyMap( QgsVectorLayer* layer, QDomElement* parentElem,
+void QgsPalLayerSettings::readDataDefinedPropertyMap( const QgsVectorLayer* layer, QDomElement* parentElem,
     QMap < QgsPalLayerSettings::DataDefinedProperties, QgsDataDefined* > & propertyMap )
 {
   if ( !layer && !parentElem )
@@ -686,9 +686,9 @@ void QgsPalLayerSettings::writeDataDefinedPropertyMap( QgsVectorLayer* layer, QD
   }
 }
 
-void QgsPalLayerSettings::readDataDefinedProperty( QgsVectorLayer* layer,
+void QgsPalLayerSettings::readDataDefinedProperty( const QgsVectorLayer* layer,
     QgsPalLayerSettings::DataDefinedProperties p,
-    QMap < QgsPalLayerSettings::DataDefinedProperties, QgsDataDefined* > & propertyMap )
+    QMap < QgsPalLayerSettings::DataDefinedProperties, QgsDataDefined* >& propertyMap )
 {
   QString newPropertyName = "labeling/dataDefined/" + mDataDefinedNames.value( p ).first;
   QVariant newPropertyField = layer->customProperty( newPropertyName, QVariant() );
@@ -744,25 +744,25 @@ void QgsPalLayerSettings::readDataDefinedProperty( QgsVectorLayer* layer,
     if ( !ddString.isEmpty() )
     {
       //upgrade any existing property to field name-based
-      layer->setCustomProperty( newPropertyName, QVariant( updateDataDefinedString( ddString ) ) );
+      const_cast<QgsVectorLayer*>( layer )->setCustomProperty( newPropertyName, QVariant( updateDataDefinedString( ddString ) ) );
 
       // fix for buffer drawing triggered off of just its data defined size in the past (<2.0)
       if ( oldIndx == 7 ) // old bufferSize enum
       {
         bufferDraw = true;
-        layer->setCustomProperty( "labeling/bufferDraw", true );
+        const_cast<QgsVectorLayer*>( layer )->setCustomProperty( "labeling/bufferDraw", true );
       }
 
       // fix for scale visibility limits triggered off of just its data defined values in the past (<2.0)
       if ( oldIndx == 16 || oldIndx == 17 ) // old minScale and maxScale enums
       {
         scaleVisibility = true;
-        layer->setCustomProperty( "labeling/scaleVisibility", true );
+        const_cast<QgsVectorLayer*>( layer )->setCustomProperty( "labeling/scaleVisibility", true );
       }
     }
 
     // remove old-style field index-based property
-    layer->removeCustomProperty( oldPropertyName );
+    const_cast<QgsVectorLayer*>( layer )->removeCustomProperty( oldPropertyName );
   }
 
   if ( !ddString.isEmpty() && ddString != QLatin1String( "0~~0~~~~" ) )
@@ -777,11 +777,11 @@ void QgsPalLayerSettings::readDataDefinedProperty( QgsVectorLayer* layer,
   else
   {
     // remove unused properties
-    layer->removeCustomProperty( newPropertyName );
+    const_cast<QgsVectorLayer*>( layer )->removeCustomProperty( newPropertyName );
   }
 }
 
-void QgsPalLayerSettings::readFromLayer( QgsVectorLayer* layer )
+void QgsPalLayerSettings::readFromLayer( const QgsVectorLayer *layer )
 {
   if ( layer->customProperty( "labeling" ).toString() != QLatin1String( "pal" ) )
   {

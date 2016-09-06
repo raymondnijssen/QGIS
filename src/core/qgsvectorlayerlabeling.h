@@ -20,6 +20,7 @@
 
 class QDomDocument;
 class QDomElement;
+class QDomNode;
 
 class QgsPalLayerSettings;
 class QgsVectorLayer;
@@ -52,12 +53,20 @@ class CORE_EXPORT QgsAbstractVectorLayerLabeling
 
     //! Get associated label settings. In case of multiple sub-providers with different settings,
     //! they are identified by their ID (e.g. in case of rule-based labeling, provider ID == rule key)
-    virtual QgsPalLayerSettings settings( QgsVectorLayer* layer, const QString& providerId = QString() ) const = 0;
+    virtual QgsPalLayerSettings settings( const QgsVectorLayer* layer, const QString& providerId = QString() ) const = 0;
+
+    void toSld( QDomNode &parent , const QgsVectorLayer *layer ) const;
 
     // static stuff
 
     //! Try to create instance of an implementation based on the XML data
     static QgsAbstractVectorLayerLabeling* create( const QDomElement& element );
+
+  protected:
+    void addCssParameter(QDomElement& parent, const QString& attributeName, const QString& attributeValue ) const;
+
+  private:
+    virtual void writeSld( QDomNode &parent, const QgsVectorLayer *layer ) const;
 };
 
 /** \ingroup core
@@ -76,7 +85,9 @@ class CORE_EXPORT QgsVectorLayerSimpleLabeling : public QgsAbstractVectorLayerLa
     virtual QString type() const override;
     virtual QgsVectorLayerLabelProvider* provider( QgsVectorLayer* layer ) const override;
     virtual QDomElement save( QDomDocument& doc ) const override;
-    virtual QgsPalLayerSettings settings( QgsVectorLayer* layer, const QString& providerId = QString() ) const override;
+    virtual QgsPalLayerSettings settings( const QgsVectorLayer *layer, const QString& providerId = QString() ) const override;
+
+    virtual void writeSld( QDomNode& featureTypeStyleElement, const QgsVectorLayer* layer ) const override;
 };
 
 #endif // QGSVECTORLAYERLABELING_H

@@ -181,7 +181,7 @@ class CORE_EXPORT QgsPalLayerSettings
     QgsPalLayerSettings &operator=( const QgsPalLayerSettings & s );
 
     //! @note added in 2.4
-    static QgsPalLayerSettings fromLayer( QgsVectorLayer* layer );
+    static QgsPalLayerSettings fromLayer( const QgsVectorLayer *layer );
 
     /** Placement modes which determine how label candidates are generated for a feature.
      */
@@ -654,7 +654,7 @@ class CORE_EXPORT QgsPalLayerSettings
      */
     void registerFeature( QgsFeature& f, QgsRenderContext& context, QgsLabelFeature** labelFeature = nullptr, QgsGeometry* obstacleGeometry = nullptr );
 
-    void readFromLayer( QgsVectorLayer* layer );
+    void readFromLayer( const QgsVectorLayer* layer );
     void writeToLayer( QgsVectorLayer* layer );
 
     /** Read settings from a DOM element
@@ -771,13 +771,13 @@ class CORE_EXPORT QgsPalLayerSettings
 
   private:
 
-    void readDataDefinedPropertyMap( QgsVectorLayer* layer, QDomElement* parentElem,
+    void readDataDefinedPropertyMap( const QgsVectorLayer *layer, QDomElement* parentElem,
                                      QMap < QgsPalLayerSettings::DataDefinedProperties,
                                      QgsDataDefined* > & propertyMap );
     void writeDataDefinedPropertyMap( QgsVectorLayer* layer, QDomElement* parentElem,
                                       const QMap < QgsPalLayerSettings::DataDefinedProperties,
                                       QgsDataDefined* > & propertyMap );
-    void readDataDefinedProperty( QgsVectorLayer* layer,
+    void readDataDefinedProperty( const QgsVectorLayer *layer,
                                   QgsPalLayerSettings::DataDefinedProperties p,
                                   QMap < QgsPalLayerSettings::DataDefinedProperties,
                                   QgsDataDefined* > & propertyMap );

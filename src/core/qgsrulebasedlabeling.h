@@ -310,7 +310,7 @@ class CORE_EXPORT QgsRuleBasedLabeling : public QgsAbstractVectorLayerLabeling
     virtual QDomElement save( QDomDocument& doc ) const override;
     virtual QgsVectorLayerLabelProvider *provider( QgsVectorLayer* layer ) const override;
     virtual QStringList subProviders() const override;
-    virtual QgsPalLayerSettings settings( QgsVectorLayer* layer, const QString& providerId = QString() ) const override;
+    virtual QgsPalLayerSettings settings( const QgsVectorLayer* layer, const QString& providerId = QString() ) const override;
 
   protected:
     Rule* mRootRule;

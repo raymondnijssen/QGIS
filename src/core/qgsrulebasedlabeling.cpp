@@ -428,7 +428,7 @@ QStringList QgsRuleBasedLabeling::subProviders() const
   return lst;
 }
 
-QgsPalLayerSettings QgsRuleBasedLabeling::settings( QgsVectorLayer* layer, const QString& providerId ) const
+QgsPalLayerSettings QgsRuleBasedLabeling::settings( const QgsVectorLayer *layer, const QString& providerId ) const
 {
   Q_UNUSED( layer );
   const Rule* rule = mRootRule->findRuleByKey( providerId );
