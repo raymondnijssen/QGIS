@@ -105,8 +105,8 @@ void QgsVectorLayerSimpleLabeling::writeSld( QDomNode& featureTypeStyleElement, 
       QDomElement fontElement = doc.createElement( "se:Font" );
       textSymbolizerElement.appendChild( fontElement );
 
-      addCssParameter( fontElement, "font-family", labelingSettings.textFont.family() );
-      addCssParameter( fontElement, "font-size", QString( labelingSettings.textFont.pixelSize() ) );
+      addSvgParameter( fontElement, "font-family", labelingSettings.textFont.family() );
+      addSvgParameter( fontElement, "font-size", QString::number( labelingSettings.textFont.pointSize() * 1.5 ) ); // TODO: use Andrea Aime's function her
 
 
       // labelplacement
@@ -116,7 +116,7 @@ void QgsVectorLayerSimpleLabeling::writeSld( QDomNode& featureTypeStyleElement, 
       QDomElement fillElement = doc.createElement( "se:Fill" );
       textSymbolizerElement.appendChild( fillElement );
 
-      addCssParameter( fillElement, "fill", QString( labelingSettings.textColor.name() ) );
+      addSvgParameter( fillElement, "fill", QString( labelingSettings.textColor.name() ) );
 
 
   }
@@ -127,11 +127,11 @@ void QgsVectorLayerSimpleLabeling::writeSld( QDomNode& featureTypeStyleElement, 
 
 }
 
-void QgsAbstractVectorLayerLabeling::addCssParameter( QDomElement& parent, const QString& attributeName, const QString& attributeValue) const
+void QgsAbstractVectorLayerLabeling::addSvgParameter( QDomElement& parent, const QString& attributeName, const QString& attributeValue) const
 {
 
-    QDomElement cssParameterElement = parent.ownerDocument().createElement( "se:CssParameter" );
-    cssParameterElement.setAttribute( "name", attributeName );
-    cssParameterElement.appendChild( parent.ownerDocument().createTextNode( attributeValue ) );
-    parent.appendChild(cssParameterElement);
+    QDomElement svgParameterElement = parent.ownerDocument().createElement( "se:SvgParameter" );
+    svgParameterElement.setAttribute( "name", attributeName );
+    svgParameterElement.appendChild( parent.ownerDocument().createTextNode( attributeValue ) );
+    parent.appendChild(svgParameterElement);
 }

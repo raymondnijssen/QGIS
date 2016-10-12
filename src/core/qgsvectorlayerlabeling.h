@@ -63,7 +63,7 @@ class CORE_EXPORT QgsAbstractVectorLayerLabeling
     static QgsAbstractVectorLayerLabeling* create( const QDomElement& element );
 
   protected:
-    void addCssParameter(QDomElement& parent, const QString& attributeName, const QString& attributeValue ) const;
+    void addSvgParameter(QDomElement& parent, const QString& attributeName, const QString& attributeValue ) const;
 
   private:
     virtual void writeSld( QDomNode &parent, const QgsVectorLayer *layer ) const;
